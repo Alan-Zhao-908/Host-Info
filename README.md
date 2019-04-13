@@ -23,7 +23,7 @@ To start the application:
 1. Install dependencies: run ` npm i `
 2. Start the server and build the bundle: run ` npm start `
 
-To stop the application: 
+To stop the application's server: 
  run ` npm stop `
 
 
