@@ -15,6 +15,14 @@ const headers = {
 
 const app = express()
 
+app.get('*.js', function (req, res, next) {
+  console.log('js requested');
+  req.url = req.url + '.gz';
+  res.set('Content-Encoding', 'gzip');
+  res.set('Content-Type', 'text/javascript');
+  next();
+});
+
 app.use(parser.json())
 app.use('/:id', express.static(path.join(__dirname, '../client/dist')));
 app.use(cors(headers));
@@ -23,8 +31,6 @@ app.use(cors(headers));
 // app.get('/:id', (req, res)=>{
 // 	res.sendFile(path.join(__dirname, '../client/dist/index.html'))
 // })
-
-
 
 // gets all the data from the database on corresponding user id from request params 
 app.get(`/host/:id`, (req, res) => {
@@ -72,6 +78,8 @@ app.get('/contact/:host/message', (req, res) => {
 		else res.json(data).status(200)
 	})
 })
+
+
 
 
 let port = 3005
