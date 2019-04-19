@@ -101,19 +101,11 @@ const adresses = [
   '1201 Rt 300, Newburgh NY 12550'
 ]
 
-const {db_password} = require('../../config')
-const {Client} = require('pg')
-const client = new Client({
-  user: 'postgres',
-  password: db_password,
-  database: 'airbnb_host_neighborhood'
-})
-const format = require('pg-format')
+const mongoose = require('mongoose');
 const faker = require('faker')
-const Promise = require('bluebird')
-
-
 const responceTimes = ['an hour', 'a few hours', 'a day', 'a week'] // in order to render grammatically correct message
+
+
 
 // creates a range array
 const ids = [];
@@ -168,84 +160,99 @@ function host_neighborhood(index) {
   this.locationsNearby = faker.lorem.words().toString()
 }
 
-//seed 10M records 
+
+
+
+const cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
+var workers = [];
 
 console.time('dbsave')
 
-async function iterate(seedCount) {
-  try {
-    await client.connect() 
-    console.log(`connected successfully`)
-    await client.query('DROP TABLE IF EXISTS hosts_neighborhood')
-    await client.query(
-      `CREATE TABLE if not exists hosts_neighborhood 
-        (
-          id SERIAL PRIMARY KEY,
-          name VARCHAR, 
-          joined DATE, 
-          location TEXT,
-          city TEXT,
-          numberOfReviews INTEGER,
-          numberOfReferences INTEGER,
-          isVerified BOOLEAN, 
-          isSuper BOOLEAN, 
-          responseRate INTEGER, 
-          avatar TEXT,
-          responseTime TEXT, 
-          language VARCHAR,
-          email VARCHAR, 
-          phoneNum VARCHAR,
-          commuteTimeAvg INTEGER,
-          commutePriceAvg INTEGER,
-          localCurrency VARCHAR,  
-          neighborhoodDescr VARCHAR,
-          policies VARCHAR, 
-          isCanc BOOLEAN,
-          cancelation VARCHAR,
-          locationsNearby VARCHAR
-        )`)
-    let count = 0
-    let entry;
-    let data = []
-    let promises = []
-    let final;
+async function masterProcess() {
+  console.log(`Master ${process.pid} is running`);
 
-    while (count < seedCount) {
-      for (let i = 0; i < 1000; i++) {
-        data.push([Object.values(new host_neighborhood(i))])
-      }
-      await insertData(data)
-      entry = null;
-      data = null
-      data = []
-      count += 1000
+  // Fork workers
+  for (let i = 0; i < numCPUs; i++) {
+    console.log(`Forking process number ${i}...`);
+
+    const worker = cluster.fork();
+    workers.push(worker);
+
+    // Listen for messages from worker
+    await worker.on('message', async function(message) {
+      await console.log(`Master ${process.pid} recevies message '${JSON.stringify(message)}' from worker ${worker.process.pid}`);
+    });
+  }
+
+  // Send message to the workers
+  workers.forEach(async function(worker) {
+    console.log(`Master ${process.pid} sends message to worker ${worker.process.pid}...`);
+    await worker.send({ msg: `Message from master ${process.pid}` });    
+  }, this);
+}
+
+async function childProcess() {
+  console.log(`Worker ${process.pid} started`);
+
+  await process.on('message', async function(message) {
+    await console.log(`Worker ${process.pid} recevies message '${JSON.stringify(message)}'`);
+  });
+
+    if(process.env.MONGODB_URI){
+      mongoose.connect(process.env.MONGODB_URI)
+    } else{
+      mongoose.connect('mongodb://localhost:27017/hosts_neighborhood', { useNewUrlParser: true });
     }
+    db = mongoose.connection;
+    mongoose.Promise = Promise;
+    await db.once('open', function() {
+      console.log('we are connected to hosts!');
+    })
+
+    const hostSchema = new mongoose.Schema({
+      name: String,
+      joined: Date, 
+      location: String,
+      city: String,
+      numberOfReviews: Number,
+      numberOfReferences: Number,
+      isVerified: Boolean, 
+      isSuper: Boolean, 
+      responseRate: Number, 
+      avatar: String,
+      responseTime: String, 
+      language: String,
+      email: String, 
+      phoneNum: String,
+      commuteTimeAvg: String,
+      commutePriceAvg: String,
+      localCurrency: String,  
+      neighborhoodDescr: String,
+      policies: String, 
+      isCanc: String,
+      cancelation: String,
+      locationsNearby: String
+    })
+  
+  var host = mongoose.model('host', hostSchema, 'host')
+  let data = []
+  for (let i = 0; i < 10; i++) {
+    data.push(new host_neighborhood(i))
   }
-  catch (ex) 
-  {
-    console.log(`something wrong happened ${ex}`)
-  }
-  finally 
-  {
-    await client.end()
-    console.log('client disconnected successfully.')
-    console.timeEnd('dbsave')
-  }
+  await host.insertMany(data)
+
+  await console.log(`Worker ${process.pid} sends message to master...`);
+  await process.send({ msg: `Message from worker ${process.pid}` });
+
+  console.log(`Worker ${process.pid} finished`);
+  console.timeEnd('dbsave')
+  process.exit();
 }
 
-async function insertData(data) {
-  try 
-  {
-    // await console.log(data.length)
-    await client.query(format('insert into hosts_neighborhood (name,joined,location,city, numberOfReviews, numberOfReferences, isVerified,isSuper,responseRate,avatar, responseTime,language ,email, phoneNum,commuteTimeAvg,commutePriceAvg, localCurrency,neighborhoodDescr,policies,isCanc, cancelation, locationsNearby) values %L', data))
-    // results = await client.query('select * from hosts_neighborhood')
-    // console.table(results.rows)
-  }
-  catch (ex) 
-  {
-    console.log(`something wrong happened ${ex}`)
-  }
+if (cluster.isMaster) {
+  masterProcess();
+  
+} else {
+  childProcess();  
 }
-
-
-iterate(200000)
