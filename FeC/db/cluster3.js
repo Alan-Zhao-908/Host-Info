@@ -132,7 +132,7 @@ for (let i = 0; i < 4; i++) {
 }
 // generate random apartments
 function host_neighborhood(index) {
-  // this.id = ids[index];
+  this.id = index;
   this.name = faker.name.findName();
   this.joined = faker.date.past();
   this.location = adresses[index];
@@ -166,7 +166,6 @@ function host_neighborhood(index) {
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 var workers = [];
-
 console.time('dbsave')
 
 async function masterProcess() {
@@ -186,18 +185,64 @@ async function masterProcess() {
   }
 
   // Send message to the workers
-  workers.forEach(async function(worker) {
-    console.log(`Master ${process.pid} sends message to worker ${worker.process.pid}...`);
-    await worker.send({ msg: `Message from master ${process.pid}` });    
-  }, this);
+  var index = 1;
+  for (worker of workers) {
+    await console.log(`Master ${process.pid} sends message to worker ${worker.process.pid}...`);
+    // await worker.send({ msg: `Message from master ${process.pid} ${i}` });  
+    await worker.send({ index }); 
+    await console.log(index)
+    await console.log(worker.process.pid)
+    index = await index +1;
+  }
+
+  // workers.forEach(async function(worker) {
+  //   console.log(`Master ${process.pid} sends message to worker ${worker.process.pid}...`);
+  //   await worker.send({ msg: `Message from master ${process.pid}` });   
+
+  // }, this);
 }
 
 async function childProcess() {
-  console.log(`Worker ${process.pid} started`);
+  await console.log(`Worker ${process.pid} started`);
+  
 
   await process.on('message', async function(message) {
     await console.log(`Worker ${process.pid} recevies message '${JSON.stringify(message)}'`);
-  });
+    // await console.log(message.index)
+    var ind = await message.index
+    await console.log(ind)
+    var start = 0;
+
+    switch(ind) {
+      case 1:
+        start = 0
+        break;
+      case 2:
+        start = 100
+        break;
+      case 3:
+        start = 200
+        break;
+      case 4:
+        start = 300
+        break;
+      case 5:
+        start = 400
+        break;
+      case 6:
+        start = 500
+        break;
+      case 7:
+        start = 600
+        break;
+      case 8:
+        start = 700
+        break;
+      default:
+        break;
+    }
+
+    
 
     if(process.env.MONGODB_URI){
       mongoose.connect(process.env.MONGODB_URI)
@@ -207,10 +252,11 @@ async function childProcess() {
     db = mongoose.connection;
     mongoose.Promise = Promise;
     await db.once('open', function() {
-      console.log('we are connected to hosts!');
+      console.log(`worker ${process.pid} is connected to hosts!`);
     })
 
     const hostSchema = new mongoose.Schema({
+      id: Number,
       name: String,
       joined: Date, 
       location: String,
@@ -234,20 +280,36 @@ async function childProcess() {
       cancelation: String,
       locationsNearby: String
     })
-  
-  var host = mongoose.model('host', hostSchema, 'host')
-  let data = []
-  for (let i = 0; i < 10; i++) {
-    data.push(new host_neighborhood(i))
-  }
-  await host.insertMany(data)
+    
+    var host = mongoose.model('host', hostSchema, 'host')
+    let count = 0
+    let data = []
 
-  await console.log(`Worker ${process.pid} sends message to master...`);
-  await process.send({ msg: `Message from worker ${process.pid}` });
+    //change this to match how many records each process needs to go until
+    processCount = 100
 
-  console.log(`Worker ${process.pid} finished`);
-  console.timeEnd('dbsave')
-  process.exit();
+    //Change this to match the batch sidze before upload is
+    batchSize = 5
+    
+    while (count < processCount) {
+      for (let i = start; i < start + batchSize; i++) {
+        data.push(new host_neighborhood(i))
+        count += 1
+        console.log(`${process.pid} ${count}`)
+      }
+      await host.insertMany(data)
+      data = null
+      data = []
+      start += batchSize
+    }
+
+    await console.log(`Worker ${process.pid} sends message to master...`);
+    await process.send({ msg: `Message from worker ${process.pid}` });
+
+    console.log(`Worker ${process.pid} finished`);
+    console.timeEnd('dbsave')
+    process.exit();
+  });   
 }
 
 if (cluster.isMaster) {
