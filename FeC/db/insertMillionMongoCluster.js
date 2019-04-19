@@ -105,8 +105,6 @@ const mongoose = require('mongoose');
 const faker = require('faker')
 const responceTimes = ['an hour', 'a few hours', 'a day', 'a week'] // in order to render grammatically correct message
 
-
-
 // creates a range array
 const ids = [];
 for (let i = 0; i < 100; i++) {
@@ -187,30 +185,24 @@ async function masterProcess() {
   // Send message to the workers
   var index = 1;
   for (worker of workers) {
-    await console.log(`Master ${process.pid} sends message to worker ${worker.process.pid}...`);
+    await console.log(`Master ${process.pid} sends message index ${index} to worker ${worker.process.pid}...`);
     // await worker.send({ msg: `Message from master ${process.pid} ${i}` });  
     await worker.send({ index }); 
-    await console.log(index)
-    await console.log(worker.process.pid)
     index = await index +1;
   }
 
   // workers.forEach(async function(worker) {
   //   console.log(`Master ${process.pid} sends message to worker ${worker.process.pid}...`);
   //   await worker.send({ msg: `Message from master ${process.pid}` });   
-
   // }, this);
 }
 
 async function childProcess() {
   await console.log(`Worker ${process.pid} started`);
   
-
   await process.on('message', async function(message) {
     await console.log(`Worker ${process.pid} recevies message '${JSON.stringify(message)}'`);
-    // await console.log(message.index)
     var ind = await message.index
-    await console.log(ind)
     var start = 0;
 
     switch(ind) {
@@ -241,8 +233,6 @@ async function childProcess() {
       default:
         break;
     }
-
-    
 
     if(process.env.MONGODB_URI){
       mongoose.connect(process.env.MONGODB_URI)
@@ -282,14 +272,16 @@ async function childProcess() {
     })
     
     var host = mongoose.model('host', hostSchema, 'host')
+
+    //count is the running count of records
     let count = 0
     let data = []
 
-    //change this to match how many records each process needs to go until
-    processCount = 100
+    //change processCount to match how many records each process needs to go until
+    processCount = 1250000
 
-    //Change this to match the batch sidze before upload is
-    batchSize = 5
+    //Change batchSize to match the batch sidze before upload is
+    batchSize = 10000
     
     while (count < processCount) {
       for (let i = start; i < start + batchSize; i++) {
