@@ -1,0 +1,3 @@
+select count(id) from hosts_neighborhood where id = 1234932 | 79 msec
+
+select * from hosts_neighborhood where id = 1234932 | 92 msec
