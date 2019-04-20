@@ -1,0 +1,103 @@
+db.getCollection('host').find({id:99}).explain('executionStats')
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "hosts_neighborhood.host",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"id" : {
+				"$eq" : 99
+			}
+		},
+		"winningPlan" : {
+			"stage" : "FETCH",
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"keyPattern" : {
+					"id" : 1
+				},
+				"indexName" : "id_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"id" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"id" : [
+						"[99.0, 99.0]"
+					]
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 1,
+		"executionTimeMillis" : 0,
+		"totalKeysExamined" : 1,
+		"totalDocsExamined" : 1,
+		"executionStages" : {
+			"stage" : "FETCH",
+			"nReturned" : 1,
+			"executionTimeMillisEstimate" : 0,
+			"works" : 2,
+			"advanced" : 1,
+			"needTime" : 0,
+			"needYield" : 0,
+			"saveState" : 0,
+			"restoreState" : 0,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"docsExamined" : 1,
+			"alreadyHasObj" : 0,
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"nReturned" : 1,
+				"executionTimeMillisEstimate" : 0,
+				"works" : 2,
+				"advanced" : 1,
+				"needTime" : 0,
+				"needYield" : 0,
+				"saveState" : 0,
+				"restoreState" : 0,
+				"isEOF" : 1,
+				"invalidates" : 0,
+				"keyPattern" : {
+					"id" : 1
+				},
+				"indexName" : "id_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"id" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"id" : [
+						"[99.0, 99.0]"
+					]
+				},
+				"keysExamined" : 1,
+				"seeks" : 1,
+				"dupsTested" : 0,
+				"dupsDropped" : 0,
+				"seenInvalidated" : 0
+			}
+		}
+	},
+	"serverInfo" : {
+		"host" : "Alans-MacBook-Pro-6.local",
+		"port" : 27017,
+		"version" : "4.0.6",
+		"gitVersion" : "caa42a1f75a56c7643d0b68d3880444375ec42e3"
+	},
+	"ok" : 1
+}
