@@ -287,9 +287,10 @@ async function childProcess() {
       for (let i = start; i < start + batchSize; i++) {
         data.push(new host_neighborhood(i))
         count += 1
-        console.log(`${process.pid} ${count}`)
+        // console.log(`${process.pid} ${count}`)
       }
       await host.insertMany(data)
+      console.log(count)
       data = null
       data = []
       start += batchSize

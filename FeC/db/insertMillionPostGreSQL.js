@@ -208,13 +208,14 @@ async function iterate(seedCount) {
     let data = []
 
     while (count < seedCount) {
-      for (let i = 0; i < 1000; i++) {
+      for (let i = 0; i < 10000; i++) {
         data.push([Object.values(new host_neighborhood(i))])
       }
       await insertData(data)
       data = null
       data = []
-      count += 1000
+      count += 10000
+      console.log(count)
     }
   }
   catch (ex) 
@@ -244,4 +245,4 @@ async function insertData(data) {
 }
 
 
-iterate(200000)
+iterate(10000000)
