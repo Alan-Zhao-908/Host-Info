@@ -178,7 +178,7 @@ async function iterate(seedCount) {
     console.log(`connected successfully`)
     await client.query('DROP TABLE IF EXISTS hosts_neighborhood')
     await client.query(
-      `CREATE TABLE if not exists hosts_neighborhood 
+      `CREATE TABLE if not exists hosts_neighborhood
         (
           id SERIAL PRIMARY KEY,
           name VARCHAR, 
@@ -233,16 +233,12 @@ async function iterate(seedCount) {
 async function insertData(data) {
   try 
   {
-    // await console.log(data.length)
     await client.query(format('insert into hosts_neighborhood (name,joined,location,city, numberOfReviews, numberOfReferences, isVerified,isSuper,responseRate,avatar, responseTime,language ,email, phoneNum,commuteTimeAvg,commutePriceAvg, localCurrency,neighborhoodDescr,policies,isCanc, cancelation, locationsNearby) values %L', data))
-    // results = await client.query('select * from hosts_neighborhood')
-    // console.table(results.rows)
   }
   catch (ex) 
   {
     console.log(`something wrong happened ${ex}`)
   }
 }
-
 
 iterate(10000000)

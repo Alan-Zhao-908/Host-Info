@@ -5,7 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "pm2 start server/index.js && webpack -d --watch",
-    "stop": "pm2 stop server/index.js"
+    "stop": "pm2 stop server/index.js", 
+    "seedStart": "pm2 start db/insertMillionPostGreSQL.js -i max",
+    "seedStop": "pm2 stop db/insertMillionPostGreSQL.js",
+    "stopAll": "pm2 stop all",
+    "deleteAll": "pm2 delete all",
+    "log": "pm2 log",
+    "seedStatus": "pm2 list"
   },
   "repository": {
     "type": "git",
