@@ -153,7 +153,7 @@ function host_neighborhood(index) {
   this.id = ids[index];
   this.name = faker.name.findName();
   this.joined = faker.date.past();
-  this.location = adresses[index];
+  this.location = adresses[Math.floor(Math.random()* 99)];
   this.city = faker.address.city();
   this.numberOfReviews = faker.random.number()
   this.numberOfReferences = faker.random.number()

@@ -11,7 +11,7 @@ class MessagesView extends React.Component {
         {this.props.messages.map(message => {
           return (
             <li className="message" key = {this.props.messages.id}>
-              {message.messageBody} <br />
+              {message.messageBody ? message.messageBody : message.messagebody} <br />
               <span className="messageSentAt">
                 {/* displays time from message sent */}
                 <Moment fromNow />

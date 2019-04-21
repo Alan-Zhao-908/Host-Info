@@ -143,7 +143,7 @@ function host_neighborhood(index) {
   // this.id = ids[index];
   this.name = faker.name.findName();
   this.joined = faker.date.past();
-  this.location = adresses[index];
+  this.location = adresses[Math.floor(Math.random()* 99)];
   this.city = faker.address.city();
   this.numberOfReviews = faker.random.number()
   this.numberOfReferences = faker.random.number()
@@ -177,6 +177,13 @@ async function iterate(seedCount) {
     await client.connect() 
     console.log(`connected successfully`)
     await client.query('DROP TABLE IF EXISTS hosts_neighborhood')
+    await client.query('DROP TABLE IF EXISTS messages')
+    await client.query(`Create table if not exists Messages(
+      id SERIAL PRIMARY KEY, 
+      toHost TEXT, 
+      messageBody TEXT
+    )`)
+
     await client.query(
       `CREATE TABLE if not exists hosts_neighborhood
         (
@@ -241,4 +248,6 @@ async function insertData(data) {
   }
 }
 
-iterate(10000000)
+
+
+iterate(200000)

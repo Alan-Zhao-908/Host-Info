@@ -46,7 +46,7 @@ class Chat extends React.Component {
       .get(`/contact/${host}/message`) // add absolute path EC2
       .then(data => {
         this.setState({
-          messages: data.data
+          messages: data.data 
         });
       })
       .catch(err => console.error(err));

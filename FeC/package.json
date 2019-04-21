@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start server/index.js && webpack -d --watch",
+    "start": "webpack -d --watch --display-error-details",
+    "startAll": "pm2 start server/index.js && webpack -d --watch",
     "stop": "pm2 stop server/index.js", 
+    "server": "nodemon server/index.js",
     "seedStart": "pm2 start db/insertMillionPostGreSQL.js -i max",
     "seedStop": "pm2 stop db/insertMillionPostGreSQL.js",
     "stopAll": "pm2 stop all",
