@@ -23,9 +23,9 @@ app.get('*.js', function (req, res, next) {
   next();
 });
 
+app.use(cors());
 app.use(parser.json())
 app.use('/:id', express.static(path.join(__dirname, '../client/dist')));
-app.use(cors(headers));
 
 
 // app.get('/:id', (req, res)=>{

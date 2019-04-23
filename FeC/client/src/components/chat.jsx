@@ -2,6 +2,9 @@ import React from "react";
 import axios from "axios";
 import MessagesView from "../components/messagesView.jsx";
 
+//should adjust to local machine's public IP during deployment 
+let proxy = process.env.API_URL || 'http://localhost' 
+
 
 /////////////////
 ///  Chat  //////
@@ -43,7 +46,7 @@ class Chat extends React.Component {
   getMessages() {
     let host = this.props.host;
     axios
-      .get(`http://localhost:3005/contact/${host}/message`) // add absolute path EC2
+      .get(`${proxy}:3005/contact/${host}/message`) // add absolute path EC2
       .then(data => {
         this.setState({
           messages: data.data 
@@ -65,7 +68,7 @@ class Chat extends React.Component {
     let message = this.state.messageText;
 
     axios({
-      url: `http://localhost:3005/contact/${host}/message`, // add absolute path EC2
+      url: `${proxy}:3005/contact/${host}/message`, // add absolute path EC2
       method: "post",
       data: { /// sets the body of the request 
         messageBody: message,
