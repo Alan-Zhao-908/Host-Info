@@ -96,15 +96,15 @@ class Neighborhood extends React.Component {
             {this.props.host.name}'s home is located in {this.props.host.city}.{" "}
           </span>
 
-          <p>{this.props.host.neighborhoodDescr}</p>
+          <p>{this.props.host.neighborhoodDescr || this.props.host.neighborhooddescr}</p>
 
           {/*  conditional rendering for more info */}
-          {!this.state.showingMoreAboutNeighborhood ? (
+          {!this.state.showingMoreAboutNeighborhood || !this.state.showingmoreaboutneighborhood ? (
 
             // initial page render the info is hidden
             <span
               className="showMoreOrLess"
-              onClick={this.showMoreAboutNeighborhood}
+              onClick={this.showMoreAboutNeighborhood || this.showmoreaboutneighborhood}
             >
               Read more about the neighborhood ▿ <br />
             </span>
@@ -121,7 +121,7 @@ class Neighborhood extends React.Component {
               <br />
               <br />
 
-              {this.props.host.locationsNearby.split(" ").map(place => {
+              {this.props.host.locationsNearby ? this.props.host.locationsNearby.split(" ").map(place => {
                 return (
                   <li>
                     {place} Overall-Time : {this.props.host.commuteTimeAvg}{" "}
@@ -130,13 +130,22 @@ class Neighborhood extends React.Component {
                   </li>
                 );
 
-              })}
+              }) : this.props.host.locationsnearby.split(" ").map(place => {
+                return (
+                  <li>
+                    {place} Overall-Time : {this.props.host.commutetimeavg}{" "}
+                    minutes average price: {this.props.host.commutepriceavg}{" "}
+                    {this.props.host.localcurrency}{" "}
+                  </li>
+                );
+
+              }) }
 
               <br />
 
               <span
                 className="showMoreOrLess"
-                onClick={this.showLessAboutNeighborhood}
+                onClick={this.showLessAboutNeighborhood || this.showlessaboutneighborhood}
               >
                 Hide ^
               </span>
@@ -164,9 +173,9 @@ class Neighborhood extends React.Component {
 
             <p>{this.props.host.policies}</p>
 
-            {!this.state.showingMorePolicies ? (
+            {!this.state.showingMorePolicies || !this.state.showingmorepolicies ? (
 
-              <span className="showMoreOrLess" onClick={this.showMorePolicies}>
+              <span className="showMoreOrLess" onClick={this.showMorePolicies || this.showmorepolicies}>
                 Read all rules ▿ <br />
               </span>
 
@@ -178,7 +187,7 @@ class Neighborhood extends React.Component {
 
                 <span
                   className="showMoreOrLess"
-                  onClick={this.showLessPolicies}
+                  onClick={this.showLessPolicies || this.showlesspolicies}
                 >
                   Hide ^
                 </span>
@@ -191,7 +200,7 @@ class Neighborhood extends React.Component {
 
             <h3>Cancellations</h3>
              {/* bellow checks whether host has strict cancelation rules */}
-            {this.props.host.isCanc ? (
+            {this.props.host.isCanc || this.props.host.iscanc ? (
 
               <div>
 
@@ -205,16 +214,16 @@ class Neighborhood extends React.Component {
                 </p>
 
 
-                {!this.state.showingMoreRules ? (
+                {!this.state.showingMoreRules || !this.state.showingmorerules ? (
 
-                  <span className="showMoreOrLess" onClick={this.showMoreRules}>
+                  <span className="showMoreOrLess" onClick={this.showMoreRules || this.showmorerules }>
                     Read more about the rules ▿ <br />
                   </span>
 
                 ) : (
 
                   <div>
-                    {this.props.host.neighborhoodDescr}
+                    {this.props.host.neighborhoodDescr || this.props.host.neighborhooddescr}
                     <br />
 
                       <a
@@ -227,7 +236,7 @@ class Neighborhood extends React.Component {
 
                       <span
                       className="showMoreOrLess"
-                      onClick={this.showLessRules}
+                      onClick={this.showLessRules || this.showlessrules}
                     >
                       Hide ^
                     </span>
@@ -240,9 +249,9 @@ class Neighborhood extends React.Component {
               <div>
                 <span>Free cancellation at any time</span>
 
-                {!this.state.showingMoreRules ? (
+                {!this.state.showingMoreRules || !this.state.showingmorerules ? (
 
-                  <span className="showMoreOrLess" onClick={this.showMoreRules}>
+                  <span className="showMoreOrLess" onClick={this.showMoreRules || this.showmorerules}>
                     Read more about the rules ▿ <br />
                   </span>
 
@@ -254,7 +263,7 @@ class Neighborhood extends React.Component {
 
                     <span
                       className="showMoreOrLess"
-                      onClick={this.showlessRules}
+                      onClick={this.showlessRules || this.showlessrules}
                     >
                       <a
                         className="showMoreOrLess"

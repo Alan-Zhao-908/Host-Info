@@ -69,7 +69,7 @@ class Host extends React.Component {
 
 
         <div className="littleIcons">
-            <span className="iconText">★ {this.props.host.numberOfReviews}{" "} Reviews </span>
+            <span className="iconText">★ {this.props.host.numberOfReviews ? this.props.host.numberOfReviews : this.props.host.numberofreviews}{" "} Reviews </span>
           <div>
             <img
               className="icons"
@@ -77,14 +77,14 @@ class Host extends React.Component {
             />{" "}
             <span className="referencesText">
               {" "}
-              {this.props.host.numberOfReferences} References
+              {this.props.host.numberOfReferences ? this.props.host.numberOfReferences : this.props.host.numberofreferences} References
             </span>
           </div>
 
 
 
           {/* checks whether the hosts are verified. In case if they are displays the verifieed icon */}
-          {this.props.host.isVerified ? (
+          {this.props.host.isVerified || this.props.host.isverified ? (
             <div>
               <img
                 className="icons"
@@ -101,7 +101,7 @@ class Host extends React.Component {
         
        {/* checks whether the hosts are a superhost. In case if they are displays the superhost text */}
         <div>
-          {this.props.host.isSuper ? (
+          {this.props.host.isSuper || this.props.host.issuper ? (
             <div className="mostOfTheTextOnPage">
               <hr className = 'hostHr'/>
               <b> {this.props.host.name} is a Superhost </b>· Superhosts are
@@ -119,7 +119,7 @@ class Host extends React.Component {
         <div>
           <p className="mostOfTheTextOnPage">
             Hi! My name is {this.props.host.name}.
-            {this.props.host.neighborhoodDescr}
+            {this.props.host.neighborhoodDescr || this.props.host.neighborhooddescr}
           </p>
         </div>
 
@@ -133,12 +133,12 @@ class Host extends React.Component {
           <br />
           <br />
           <span>
-            Response rate: <b>{this.props.host.responseRate}% </b>
+            Response rate: <b>{this.props.host.responseRate || this.props.host.responserate}% </b>
           </span>
           <br />
           <br />
           <span>
-            Response time: <b> within {this.props.host.responseTime} </b>
+            Response time: <b> within {this.props.host.responseTime || this.props.host.responsetime} </b>
           </span>
           <br />
           <br />
@@ -153,10 +153,10 @@ class Host extends React.Component {
 
         
           <div>
-            <ReactModal isOpen={this.state.chatIsOpen} contentLabel="Chat">
+            <ReactModal isOpen={this.state.chatIsOpen || this.state.chatisopen} contentLabel="Chat">
               <Chat
                 host={this.props.host.name}
-                handleCloseChatX={this.closeChat}
+                handleCloseChatX={this.closeChat || this.closechat}
               />
             </ReactModal>
           </div>

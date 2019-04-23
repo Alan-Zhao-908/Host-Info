@@ -2,6 +2,8 @@
 const {db_password} = require('../../config')
 const {Client} = require('pg')
 const db = new Client({
+  host: '52.90.63.27',
+  port: 5432,
   user: 'postgres',
   password: db_password,
   database: 'airbnb_host_neighborhood'
