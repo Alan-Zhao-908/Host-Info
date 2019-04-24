@@ -7,8 +7,11 @@ import Host from "./components/host.jsx";
 import Neighborhood from "./components/neighborhood.jsx";
 import '../dist/style.css'
 
+
 //should adjust to local machine's public IP during deployment 
-let proxy = process.env.API_URL || 'http://localhost' 
+// let proxy = process.env.PUBLIC_IP
+
+let proxy = '52.206.160.77'
 
 export class App extends React.Component {
   constructor(props) {
@@ -31,7 +34,7 @@ export class App extends React.Component {
   getHost() {
     let id = window.location.href.split("/")[3];
     axios
-      .get(`${proxy}:3005/host/${id}`) // add absolute path to EC2 for deployment
+      .get(`http://52.206.160.77:3005/host/${id}`) // add absolute path to EC2 for deployment
       .then(host => {
         this.setState(
           {
