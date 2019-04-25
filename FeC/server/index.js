@@ -1,3 +1,4 @@
+const nr = require('newrelic')
 const express = require('express')
 const db = require('../db/database.js').db
 const parser = require('body-parser')
