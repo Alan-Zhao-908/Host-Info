@@ -4,7 +4,10 @@ const db = require('../db/database.js').db
 const parser = require('body-parser')
 const path = require('path')
 const cors = require('cors');
-const { Pool } = require('pg');
+
+var redis = require('redis').createClient(6379, '3.83.252.45')
+const lru = require('redis-lru')
+var hostCache = lru(redis, 10000);
 
 // set up header to prevent CORS errors and use in middleware
 const headers = {
@@ -24,28 +27,38 @@ app.get('*.js', function (req, res, next) {
   next();
 });
 
+
+app.get('/loaderio-aa032c8b1558f5e783f9065037144af1', (req, res)=>{
+	// res.send('hi')
+	res.sendFile(path.join(__dirname,'../loaderio-aa032c8b1558f5e783f9065037144af1.txt'))
+})
+
 app.use(cors());
 app.use(parser.json())
 app.use('/:id', express.static(path.join(__dirname, '../client/dist')));
 
 
-// app.get('/:id', (req, res)=>{
-// 	res.sendFile(path.join(__dirname, '../client/dist/index.html'))
-// })
-
 // gets all the data from the database on corresponding user id from request params 
 app.get(`/host/:id`, (req, res) => {
 	let id = req.params.id
 
-	db.query(`select * from hosts_neighborhood where id = ${id};`)
-	.then((data) => {
-		res.json(data.rows).status(200)
+	hostCache.get(id)
+	.then((results) => {
+		if (results) {
+			res.json(results)
+		} else {
+			db.query(`select * from hosts_neighborhood where id = ${id};`)
+			.then((data) => {
+				hostCache.set(id, data.rows)
+				res.json(data.rows).status(200)
+			})
+			.catch((err) => {
+				console.error(err, `<-- Error occured on retreiving all the hosts from db, check 'get /host/:id' in server/index.js line 30`)
+				res.status(500)
+			})
+
+		}
 	})
-	.catch((err) => {
-		console.error(err, `<-- Error occured on retreiving all the hosts from db, check 'get /host/:id' in server/index.js line 30`)
-		res.status(500)
-	})
-	
 	//old query
 
 	// db.all(`select * from hosts_neighborhood where id = ${id}`, (err, data) => {

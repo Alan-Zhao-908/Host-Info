@@ -2,3 +2,6 @@ node_modules
 db/*.sqlite
 *.DS_Store
 client/src/.env
+FeC/newrelic.js
+FeC/newrelic_agent.log
+loaderio-930a10f7e7c6beab16fbaa87600c7145.txt

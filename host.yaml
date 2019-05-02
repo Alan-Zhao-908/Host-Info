@@ -1,0 +1,37 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: hostservice
+spec:
+  selector:
+    app: myapp
+  ports:
+    - protocol: "TCP"
+      # Port accessible inside cluster
+      port: 8085
+      # Port to forward to inside the pod
+      targetPort: 3005
+      # Port accessible outside cluster
+      nodePort: 30000
+  type: LoadBalancer
+ 
+ 
+ 
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: hostdeployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: myapp
+          image: alanzhao1/host-neighborhood-service:17
+          ports:
+            - containerPort: 3005

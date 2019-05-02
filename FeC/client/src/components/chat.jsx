@@ -47,7 +47,7 @@ class Chat extends React.Component {
   getMessages() {
     let host = this.props.host;
     axios
-      .get(`http://52.206.160.77:3005/contact/${host}/message`) // add absolute path EC2
+      .get(`http://a9eb265976cee11e9bc610267a3936a3-1521699089.us-east-1.elb.amazonaws.com:8085/contact/${host}/message`) // add absolute path EC2. For kubernetes add service address
       .then(data => {
         this.setState({
           messages: data.data 
@@ -69,7 +69,7 @@ class Chat extends React.Component {
     let message = this.state.messageText;
 
     axios({
-      url: `http://52.206.160.77:3005/contact/${host}/message`, // add absolute path EC2
+      url: `http://a9eb265976cee11e9bc610267a3936a3-1521699089.us-east-1.elb.amazonaws.com:8085/contact/${host}/message`, // add absolute path EC2. For kubernetes add service address
       method: "post",
       data: { /// sets the body of the request 
         messageBody: message,
