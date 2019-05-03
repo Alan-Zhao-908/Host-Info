@@ -34,7 +34,7 @@ export class App extends React.Component {
   getHost() {
     let id = window.location.href.split("/")[3];
     axios
-      .get(`http://a9eb265976cee11e9bc610267a3936a3-1521699089.us-east-1.elb.amazonaws.com:8085/host/${id}`) // add absolute path to EC2 for deployment. For kubernetes add service address
+      .get(`http://acc32e4826dd011e9aeee02f7ff798c2-521621316.us-east-1.elb.amazonaws.com:8085/host/${id}`) // add absolute path to EC2 for deployment. For kubernetes add service address
       .then(host => {
         this.setState(
           {

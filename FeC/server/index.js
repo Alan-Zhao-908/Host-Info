@@ -20,7 +20,6 @@ const headers = {
 const app = express()
 
 app.get('*.js', function (req, res, next) {
-  console.log('js requested');
   req.url = req.url + '.gz';
   res.set('Content-Encoding', 'gzip');
   res.set('Content-Type', 'text/javascript');
@@ -28,9 +27,9 @@ app.get('*.js', function (req, res, next) {
 });
 
 
-app.get('/loaderio-aa032c8b1558f5e783f9065037144af1', (req, res)=>{
+app.get('/loaderio-2e80bb899a40905ff8b1d526186d6895', (req, res)=>{
 	// res.send('hi')
-	res.sendFile(path.join(__dirname,'../loaderio-aa032c8b1558f5e783f9065037144af1.txt'))
+	res.sendFile(path.join(__dirname,'../loaderio-2e80bb899a40905ff8b1d526186d6895.txt'))
 })
 
 app.use(cors());
