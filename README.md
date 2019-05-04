@@ -5,7 +5,7 @@
 
 1. React
 2. Express
-3. PostGreSQL
+3. PostGreSQL + connection pooling
 4. Kubernetes
 5. Redis Cache
 6. Docker
@@ -33,7 +33,6 @@ npm: google-map-react (https://www.npmjs.com/package/google-map-react)
 <img src = "docker_design.png" width =700>
 
 <img src = "system_design.png" width= 1000>
-
 
 
 
@@ -65,4 +64,17 @@ Seed 10 million artificially generated records into database by running `node Fe
 
 You can also seed 10 million artificially generated records into mongo database by running `node FeC/db/insertMillionMongoCluster.js`, which seeds the database in parallel using the full number of processors on your machine. 
 
+## Setting up scalable system architecture
 
+1. Setup database, redis cache, proxy in separate AWS EC2 instances 
+2. Change service `FeC/db/database.js` database host and port to AWS EC2 instance and port 
+3. Change service `FeC/server/index.js` redis host and port to AWS Ec2 instance and port
+4. Dockerize service using Dockerfile in repo
+5. Push image to dockerhub
+6. Set up Kubernetes and integrate with AWS credentials
+7. Create Kubernetes Cluster with configured # of nodes and size of nodes
+8. Setup Kubernetes Deployment using host.yaml file in repo
+9. Deploy service on Kubernetes
+10. Setup Kubernetes Dashboard
+11. Make rolling updates as necessary (e.g. changing ip addresses for /chat.jsx get and postMessage methods and /index.jsx getHost method to refer to Kubernetes load balancer address and port)
+ 
