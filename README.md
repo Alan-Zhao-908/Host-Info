@@ -30,7 +30,7 @@ npm: google-map-react (https://www.npmjs.com/package/google-map-react)
 
 ## System architecture:
 
-<img src = "sdc_design.png" width 700>
+<img src = "docker_design.png" width =700>
 
 <img src = "system_design.png" width= 1000>
 
