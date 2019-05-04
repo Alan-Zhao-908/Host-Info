@@ -60,3 +60,5 @@ To stop the application's server:
 Need to make sure that you're adding PostGreSQL Apt repository to ubuntu before you try to install. Even number versions are long term version (16.04 and 18.04) and are backwards compatible. Odd number versions (19.04) may not be backwards compatible and are more for testing of new features. But regardless, need to give access so in Ubuntu to postgresql website to be able to install:
 https://askubuntu.com/questions/1088444/install-postgresql-9-4-on-ubuntu-18-04
 
+
+Seed 10 million records into database by running `node FeC/db/insertMillionPostGreSQL.js` 
