@@ -61,4 +61,8 @@ Need to make sure that you're adding PostGreSQL Apt repository to ubuntu before 
 https://askubuntu.com/questions/1088444/install-postgresql-9-4-on-ubuntu-18-04
 
 
-Seed 10 million records into database by running `node FeC/db/insertMillionPostGreSQL.js` 
+Seed 10 million artificially generated records into database by running `node FeC/db/insertMillionPostGreSQL.js` 
+
+You can also seed 10 million artificially generated records into mongo database by running `node FeC/db/insertMillionMongoCluster.js`, which seeds the database in parallel using the full number of processors on your machine. 
+
+
