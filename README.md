@@ -30,7 +30,7 @@ npm: google-map-react (https://www.npmjs.com/package/google-map-react)
 
 ## System architecture:
 
-<img src = "System \Design.png">
+<img src = "system_design.png" width= 500>
 
 
 ## Getting Started:
