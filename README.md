@@ -4,9 +4,21 @@
 ## Build with:
 
 1. React
-1. Express
-1. Sqlite
+2. Express
+3. PostGreSQL
+4. Kubernetes
+5. Redis Cache
+6. Docker
+7. AWS EC2, S3, Route 53
+8. Service oriented architecture
 
+## Tested with:
+
+1. Loader.io
+
+## Monitored with 
+
+1. New Relic
 
 ## API:
 
@@ -15,6 +27,10 @@ Google Maps API (https://developers.google.com/maps/documentation/)
 ## API helpers:
 
 npm: google-map-react (https://www.npmjs.com/package/google-map-react)
+
+## System architecture:
+
+<img src = "System \Design.png">
 
 
 ## Getting Started:
